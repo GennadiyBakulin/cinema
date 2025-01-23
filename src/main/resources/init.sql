@@ -23,5 +23,6 @@ create table ticket
 (
     id         serial PRIMARY KEY,
     place_id   smallint REFERENCES place (id),
-    session_id int REFERENCES session (id)
+    session_id int REFERENCES session (id),
+    purchased  boolean not null
 );
