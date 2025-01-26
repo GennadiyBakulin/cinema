@@ -10,15 +10,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CinemaRepository {
+public class MovieRepository {
+
+  private static final String SQL_QUERY_GET_MOVIE_BY_ID = "select * from movie where id = ?";
 
   private final JdbcTemplate jdbcTemplate;
 
   public Optional<Movie> findMovieById(Integer id) {
-    String sql = "select * from movie where id = ?";
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
-            sql,
+            SQL_QUERY_GET_MOVIE_BY_ID,
             this::mapRow,
             id));
   }
