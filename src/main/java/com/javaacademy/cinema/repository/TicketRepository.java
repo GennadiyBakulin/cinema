@@ -58,18 +58,18 @@ public class TicketRepository {
         id);
   }
 
-  public List<Ticket> getListPurchasedTicketOnSession(Session session) {
+  public List<Ticket> getListPurchasedTicketOnSession(Integer sessionId) {
     return jdbcTemplate.query(
         SQL_QUERY_GET_LIST_PURCHASED_TICKET_ON_SESSION,
         this::mapToTicket,
-        session.getId());
+        sessionId);
   }
 
-  public List<Ticket> getListNotPurchasedTicketOnSession(Session session) {
+  public List<Ticket> getListNotPurchasedTicketOnSession(Integer sessionId) {
     return jdbcTemplate.query(
         SQL_QUERY_GET_LIST_NOT_PURCHASED_TICKET_ON_SESSION,
         this::mapToTicket,
-        session.getId());
+        sessionId);
   }
 
   @SneakyThrows
