@@ -3,7 +3,6 @@ package com.javaacademy.cinema.repository;
 import com.javaacademy.cinema.entity.Place;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
-import com.javaacademy.cinema.entity.dto.TicketDto;
 import com.javaacademy.cinema.mapper.TicketMapper;
 import java.sql.ResultSet;
 import java.util.List;
@@ -33,12 +32,12 @@ public class TicketRepository {
   private final SessionRepository sessionRepository;
   private final TicketMapper mapper;
 
-  public Ticket saveTicket(TicketDto ticketDto) {
+  public Ticket saveTicket(Place place, Session session) {
     Integer id = jdbcTemplate.queryForObject(
         SQL_QUERY_CREATE_TICKET_AND_RETURN_ID,
         Integer.class,
-        ticketDto.getPlace(), ticketDto.getSession(), ticketDto.getPurchased());
-    return mapper.ticketDtoToEntity(ticketDto, id);
+        place, session, false);
+    return new Ticket(id, place, session, false);
   }
 
 

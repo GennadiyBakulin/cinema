@@ -13,5 +13,4 @@ public class TicketDto {
 
   private Place place;
   private Session session;
-  private Boolean purchased;
 }
