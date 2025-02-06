@@ -41,7 +41,7 @@ public class SessionRepository {
             id));
   }
 
-  public List<Session> getAllMovie() {
+  public List<Session> getAllSession() {
     return jdbcTemplate.query(SQL_QUERY_GET_ALL_SESSION, this::mapToSession);
   }
 
