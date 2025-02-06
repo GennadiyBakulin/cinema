@@ -23,14 +23,6 @@ public class MovieRepository {
   private final JdbcTemplate jdbcTemplate;
   private final MovieMapper mapper;
 
-  public Optional<Movie> findMovieById(Integer id) {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            SQL_QUERY_GET_MOVIE_BY_ID,
-            this::mapToMovie,
-            id));
-  }
-
   public Movie saveMovie(MovieDto movieDto) {
     Integer id = jdbcTemplate.queryForObject(
         SQL_QUERY_CREATE_MOVIE_AND_RETURN_ID,
@@ -39,9 +31,16 @@ public class MovieRepository {
     return mapper.movieDtoToEntity(movieDto, id);
   }
 
+  public Optional<Movie> findMovieById(Integer id) {
+    return Optional.ofNullable(
+        jdbcTemplate.queryForObject(
+            SQL_QUERY_GET_MOVIE_BY_ID,
+            this::mapToMovie,
+            id));
+  }
+
   public List<Movie> getAllMovie() {
-    List<Movie> movies = jdbcTemplate.query(SQL_QUERY_GET_ALL_MOVIE, this::mapToMovie);
-    return movies;
+    return jdbcTemplate.query(SQL_QUERY_GET_ALL_MOVIE, this::mapToMovie);
   }
 
   @SneakyThrows
