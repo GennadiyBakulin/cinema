@@ -36,7 +36,7 @@ public class TicketRepository {
     Integer id = jdbcTemplate.queryForObject(
         SQL_QUERY_CREATE_TICKET_AND_RETURN_ID,
         Integer.class,
-        place, session, false);
+        place.getId(), session.getId(), false);
     return new Ticket(id, place, session, false);
   }
 

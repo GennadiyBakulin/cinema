@@ -1,12 +1,8 @@
 package com.javaacademy.cinema.controller;
 
-import com.javaacademy.cinema.entity.Place;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.dto.SessionDto;
-import com.javaacademy.cinema.repository.PlaceRepository;
-import com.javaacademy.cinema.repository.SessionRepository;
-import com.javaacademy.cinema.repository.TicketRepository;
-import java.util.List;
+import com.javaacademy.cinema.service.SessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,16 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class SessionController {
 
-  private final SessionRepository sessionRepository;
-  private final PlaceRepository placeRepository;
-  private final TicketRepository ticketRepository;
+  private final SessionService sessionService;
 
   @PostMapping
   public ResponseEntity<?> saveSession(@RequestBody SessionDto sessionDto) {
     try {
-      Session session = sessionRepository.saveSession(sessionDto);
-      List<Place> placeList = placeRepository.getAllPlace();
-      placeList.forEach(place -> ticketRepository.saveTicket(place, session));
+      Session session = sessionService.saveSession(sessionDto);
       return ResponseEntity.status(HttpStatus.CREATED).body(session);
     } catch (Exception ex) {
       return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(ex.getMessage());

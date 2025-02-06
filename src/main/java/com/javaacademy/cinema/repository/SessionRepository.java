@@ -29,7 +29,7 @@ public class SessionRepository {
     Integer id = jdbcTemplate.queryForObject(
         SQL_QUERY_CREATE_SESSION_AND_RETURN_ID,
         Integer.class,
-        sessionDto.getMovie(), sessionDto.getDateTime(), sessionDto.getPrice());
+        sessionDto.getMovie().getId(), sessionDto.getDateTime(), sessionDto.getPrice());
     return mapper.sessionDtoToEntity(sessionDto, id);
   }
 

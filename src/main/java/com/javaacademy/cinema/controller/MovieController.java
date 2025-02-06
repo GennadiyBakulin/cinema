@@ -2,9 +2,10 @@ package com.javaacademy.cinema.controller;
 
 import com.javaacademy.cinema.entity.dto.MovieDto;
 import com.javaacademy.cinema.exception.NotUniqueNameMovie;
-import com.javaacademy.cinema.repository.MovieRepository;
+import com.javaacademy.cinema.service.MovieService;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,17 +19,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MovieController {
 
-  private final MovieRepository repository;
+  private final MovieService movieService;
+
+  @Value("${header.user-token.value}")
+  private String tokenValue;
 
   @PostMapping
   public ResponseEntity<?> saveMovie(
       @RequestHeader("user-token") String token,
       @RequestBody MovieDto movieDto) {
-    if (Objects.isNull(token) || !token.equals("secretadmin123")) {
+    if (Objects.isNull(token) || !token.equals(tokenValue)) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
     try {
-      return ResponseEntity.status(HttpStatus.CREATED).body(repository.saveMovie(movieDto));
+      return ResponseEntity.status(HttpStatus.CREATED).body(movieService.saveMovie(movieDto));
     } catch (NotUniqueNameMovie ex) {
       return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(ex.getMessage());
     }
