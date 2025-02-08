@@ -3,7 +3,6 @@ package com.javaacademy.cinema.repository;
 import com.javaacademy.cinema.entity.Place;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
-import com.javaacademy.cinema.mapper.TicketMapper;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +29,6 @@ public class TicketRepository {
   private final JdbcTemplate jdbcTemplate;
   private final PlaceRepository placeRepository;
   private final SessionRepository sessionRepository;
-  private final TicketMapper mapper;
 
   public Ticket saveTicket(Place place, Session session) {
     Integer id = jdbcTemplate.queryForObject(
