@@ -5,6 +5,7 @@ import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRq;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRs;
+import com.javaacademy.cinema.exception.NotChangeStatusTicket;
 import com.javaacademy.cinema.repository.TicketRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,7 @@ public class TicketService {
     Ticket ticketNotPurchased = listNotPurchasedTicket.stream()
         .filter(ticket -> ticket.getPlace().getName().equals(ticketBookingDtoRq.getPlaceName()))
         .findFirst()
-        .orElseThrow(() -> new RuntimeException("Билет уже был выкуплен!"));
+        .orElseThrow(() -> new NotChangeStatusTicket("Билет не найден или уже был выкуплен!"));
     changeTicketStatusByIdToPurchased(ticketNotPurchased.getId());
     return new TicketBookingDtoRs(
         ticketNotPurchased.getId(),

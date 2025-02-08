@@ -3,6 +3,7 @@ package com.javaacademy.cinema.repository;
 import com.javaacademy.cinema.entity.Place;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
+import com.javaacademy.cinema.exception.NotChangeStatusTicket;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
@@ -48,8 +49,7 @@ public class TicketRepository {
   }
 
   public void changeTicketStatusByIdToPurchased(Integer ticketId) {
-    Ticket ticket = findTicketById(ticketId).orElseThrow(
-        () -> new RuntimeException("Билет по данному id не найден!"));
+    Ticket ticket = findTicketById(ticketId).orElseThrow();
     checkTicketPurchasedStatus(ticket);
     jdbcTemplate.update(
         SQL_QUERY_CHANGE_STATUS_TICKET_ON_PURCHASED,
@@ -83,7 +83,7 @@ public class TicketRepository {
 
   private void checkTicketPurchasedStatus(Ticket ticket) {
     if (ticket.getPurchased()) {
-      throw new RuntimeException("Билет уже куплен!");
+      throw new NotChangeStatusTicket("Билет уже был выкуплен!");
     }
   }
 }

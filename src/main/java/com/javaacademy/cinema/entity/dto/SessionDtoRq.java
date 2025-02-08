@@ -1,6 +1,5 @@
 package com.javaacademy.cinema.entity.dto;
 
-import com.javaacademy.cinema.entity.Movie;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SessionDtoRq {
 
-  private Movie movie;
+  private Integer movieId;
   private LocalDateTime dateTime;
   private BigDecimal price;
 }

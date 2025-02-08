@@ -1,8 +1,8 @@
 package com.javaacademy.cinema.repository;
 
+import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
-import com.javaacademy.cinema.mapper.SessionMapper;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +22,15 @@ public class SessionRepository {
 
   private final JdbcTemplate jdbcTemplate;
   private final MovieRepository movieRepository;
-  private final SessionMapper mapper;
 
   public Session saveSession(SessionDtoRq sessionDtoRq) {
+    Movie movie = movieRepository.findMovieById(sessionDtoRq.getMovieId())
+        .orElseThrow();
     Integer id = jdbcTemplate.queryForObject(
         SQL_QUERY_CREATE_SESSION_AND_RETURN_ID,
         Integer.class,
-        sessionDtoRq.getMovie().getId(), sessionDtoRq.getDateTime(), sessionDtoRq.getPrice());
-    return mapper.sessionDtoToEntity(sessionDtoRq, id);
+        sessionDtoRq.getMovieId(), sessionDtoRq.getDateTime(), sessionDtoRq.getPrice());
+    return new Session(id, movie, sessionDtoRq.getDateTime(), sessionDtoRq.getPrice());
   }
 
   public Optional<Session> findSessionById(Integer id) {
@@ -48,7 +49,8 @@ public class SessionRepository {
   private Session mapToSession(ResultSet rs, int rowNum) {
     Session session = new Session();
     session.setId(rs.getInt("id"));
-    session.setMovie(movieRepository.findMovieById(rs.getInt("movie_id")).orElseThrow());
+    session.setMovie(movieRepository.findMovieById(rs.getInt("movie_id"))
+        .orElseThrow());
     session.setDateTime(rs.getTimestamp("dateTime").toLocalDateTime());
     session.setPrice(rs.getBigDecimal("price"));
     return session;

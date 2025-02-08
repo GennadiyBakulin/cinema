@@ -20,7 +20,8 @@ public class MovieService {
   }
 
   public Movie findMovieById(Integer id) {
-    return repository.findMovieById(id).orElseThrow();
+    return repository.findMovieById(id)
+        .orElseThrow();
   }
 
   public List<MovieDto> getAllMovies() {
