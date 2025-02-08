@@ -1,18 +1,20 @@
 package com.javaacademy.cinema.mapper;
 
 import com.javaacademy.cinema.entity.Session;
-import com.javaacademy.cinema.entity.dto.SessionDto;
+import com.javaacademy.cinema.entity.dto.SessionDtoRq;
+import com.javaacademy.cinema.entity.dto.SessionDtoRs;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SessionMapper {
 
-  public Session sessionDtoToEntity(SessionDto sessionDto, Integer id) {
-    return new Session(id, sessionDto.getMovie(), sessionDto.getDateTime(), sessionDto.getPrice());
+  public Session sessionDtoToEntity(SessionDtoRq sessionDtoRq, Integer id) {
+    return new Session(id, sessionDtoRq.getMovie(), sessionDtoRq.getDateTime(),
+        sessionDtoRq.getPrice());
   }
 
-  public SessionDto entityToSessionDto(Session session) {
-    return new SessionDto(session.getId(), session.getMovie(), session.getDateTime(),
+  public SessionDtoRs entityToSessionDtoRs(Session session) {
+    return new SessionDtoRs(session.getId(), session.getMovie().getName(), session.getDateTime(),
         session.getPrice());
   }
 }

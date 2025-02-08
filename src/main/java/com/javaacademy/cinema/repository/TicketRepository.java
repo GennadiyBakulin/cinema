@@ -74,9 +74,9 @@ public class TicketRepository {
   private Ticket mapToTicket(ResultSet rs, int rowNum) {
     Ticket ticket = new Ticket();
     ticket.setId(rs.getInt("id"));
-    ticket.setPlace(placeRepository.findPlaceById(rs.getInt("place_id")).orElse(new Place()));
+    ticket.setPlace(placeRepository.findPlaceById(rs.getInt("place_id")).orElseThrow());
     ticket.setSession(
-        sessionRepository.findSessionById(rs.getInt("session_id")).orElse(new Session()));
+        sessionRepository.findSessionById(rs.getInt("session_id")).orElseThrow());
     ticket.setPurchased(rs.getBoolean("purchased"));
     return ticket;
   }

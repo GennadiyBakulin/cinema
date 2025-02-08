@@ -1,7 +1,8 @@
 package com.javaacademy.cinema.controller;
 
 import com.javaacademy.cinema.entity.Session;
-import com.javaacademy.cinema.entity.dto.SessionDto;
+import com.javaacademy.cinema.entity.dto.SessionDtoRq;
+import com.javaacademy.cinema.entity.dto.SessionDtoRs;
 import com.javaacademy.cinema.service.SessionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class SessionController {
   private final SessionService sessionService;
 
   @PostMapping
-  public ResponseEntity<?> saveSession(@RequestBody SessionDto sessionDto) {
+  public ResponseEntity<?> saveSession(@RequestBody SessionDtoRq sessionDtoRq) {
     try {
-      Session session = sessionService.saveSession(sessionDto);
+      Session session = sessionService.saveSession(sessionDtoRq);
       return ResponseEntity.status(HttpStatus.CREATED).body(session);
     } catch (Exception ex) {
       return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(ex.getMessage());
@@ -32,7 +33,7 @@ public class SessionController {
   }
 
   @GetMapping
-  public List<SessionDto> getAllSession() {
+  public List<SessionDtoRs> getAllSession() {
     return sessionService.getAllSession();
   }
 
