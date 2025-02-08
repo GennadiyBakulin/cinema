@@ -15,4 +15,8 @@ public class TicketService {
   public List<Ticket> getListPurchasedTicket(Integer sessionId) {
     return ticketRepository.getListPurchasedTicketOnSession(sessionId);
   }
+
+  public List<Ticket> getListNotPurchasedTicket(Integer sessionId) {
+    return ticketRepository.getListNotPurchasedTicketOnSession(sessionId);
+  }
 }

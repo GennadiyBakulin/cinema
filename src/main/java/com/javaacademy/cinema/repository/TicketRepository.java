@@ -41,21 +41,21 @@ public class TicketRepository {
   }
 
 
-  public Optional<Ticket> findTicketById(Integer id) {
+  public Optional<Ticket> findTicketById(Integer ticketId) {
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
             SQL_QUERY_GET_TICKET_BY_ID,
             this::mapToTicket,
-            id));
+            ticketId));
   }
 
-  public void changeTicketStatusByIdToPurchased(Integer id) {
-    Ticket ticket = findTicketById(id).orElseThrow(
+  public void changeTicketStatusByIdToPurchased(Integer ticketId) {
+    Ticket ticket = findTicketById(ticketId).orElseThrow(
         () -> new RuntimeException("Билет по данному id не найден!"));
     checkTicketPurchasedStatus(ticket);
     jdbcTemplate.update(
         SQL_QUERY_CHANGE_STATUS_TICKET_ON_PURCHASED,
-        id);
+        ticketId);
   }
 
   public List<Ticket> getListPurchasedTicketOnSession(Integer sessionId) {

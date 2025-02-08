@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,5 +34,14 @@ public class SessionController {
   @GetMapping
   public List<SessionDto> getAllSession() {
     return sessionService.getAllSession();
+  }
+
+  @GetMapping("/{id}/free-place")
+  public ResponseEntity<?> getFreePlaceOnSession(@PathVariable Integer id) {
+    try {
+      return ResponseEntity.ok(sessionService.getFreePlaceOnSession(id));
+    } catch (Exception ex) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
   }
 }
