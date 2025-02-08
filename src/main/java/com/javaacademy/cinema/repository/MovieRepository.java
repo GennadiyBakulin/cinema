@@ -61,7 +61,7 @@ public class MovieRepository {
             id));
   }
 
-  public List<Movie> getAllMovie() {
+  public List<Movie> getAllMovies() {
     return jdbcTemplate.query(SQL_QUERY_GET_ALL_MOVIE, this::mapToMovie);
   }
 
