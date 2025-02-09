@@ -8,7 +8,7 @@ create table movie
 create table place
 (
     id   smallserial PRIMARY KEY,
-    name varchar(3) not null unique
+    name varchar(2) not null unique
 );
 
 create table session
@@ -16,7 +16,7 @@ create table session
     id       serial PRIMARY KEY,
     movie_id int REFERENCES movie (id),
     datetime timestamp not null,
-    price    money     not null check ( cast(price as numeric) >= 0 )
+    price    numeric     not null check ( cast(price as numeric) >= 0 )
 );
 
 create table ticket

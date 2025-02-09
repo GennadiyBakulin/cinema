@@ -4,13 +4,12 @@ import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.dto.MovieDto;
 import com.javaacademy.cinema.exception.NotUniqueNameMovie;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -59,14 +58,9 @@ public class MovieRepository {
   private void checkUniqueNameMovie(String name) {
     Integer count = jdbcTemplate.queryForObject(
         SQL_QUERY_CHECK_UNIQUE_NAME_MOVIE,
-        new RowMapper<Integer>() {
-          @Override
-          public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return rs.getRow();
-          }
-        },
+        Integer.class,
         name);
-    if (count != 0) {
+    if (Objects.nonNull(count) && count != 0) {
       throw new NotUniqueNameMovie(
           "Не удалось добавить фильм, фильм с таким названием уже есть в БД!");
     }

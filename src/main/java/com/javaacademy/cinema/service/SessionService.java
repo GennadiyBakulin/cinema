@@ -30,10 +30,6 @@ public class SessionService {
     return session;
   }
 
-  public Session findSessionById(Integer id) {
-    return sessionRepository.findSessionById(id).orElseThrow();
-  }
-
   public List<SessionDtoRs> getAllSession() {
     return sessionRepository.getAllSession().stream().map(mapper::entityToSessionDtoRs).toList();
   }

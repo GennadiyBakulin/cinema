@@ -4,6 +4,7 @@ import com.javaacademy.cinema.entity.Place;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.exception.NotChangeStatusTicket;
+import com.javaacademy.cinema.exception.NotFoundSessionById;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class TicketRepository {
   private static final String SQL_QUERY_GET_LIST_PURCHASED_TICKET_ON_SESSION =
       "select * from ticket where purchased and session_id = ?";
   private static final String SQL_QUERY_GET_LIST_NOT_PURCHASED_TICKET_ON_SESSION =
-      "select * from ticket where !purchased and session_id = ?";
+      "select * from ticket where purchased = false and session_id = ?";
 
   private final JdbcTemplate jdbcTemplate;
   private final PlaceRepository placeRepository;
@@ -57,6 +58,7 @@ public class TicketRepository {
   }
 
   public List<Ticket> getListPurchasedTicketOnSession(Integer sessionId) {
+    checkPresentSession(sessionId);
     return jdbcTemplate.query(
         SQL_QUERY_GET_LIST_PURCHASED_TICKET_ON_SESSION,
         this::mapToTicket,
@@ -64,6 +66,7 @@ public class TicketRepository {
   }
 
   public List<Ticket> getListNotPurchasedTicketOnSession(Integer sessionId) {
+    checkPresentSession(sessionId);
     return jdbcTemplate.query(
         SQL_QUERY_GET_LIST_NOT_PURCHASED_TICKET_ON_SESSION,
         this::mapToTicket,
@@ -79,6 +82,11 @@ public class TicketRepository {
         sessionRepository.findSessionById(rs.getInt("session_id")).orElseThrow());
     ticket.setPurchased(rs.getBoolean("purchased"));
     return ticket;
+  }
+
+  private void checkPresentSession(Integer sessionId) {
+    sessionRepository.findSessionById(sessionId)
+        .orElseThrow(() -> new NotFoundSessionById("Сеанс с указанным Id не найден!"));
   }
 
   private void checkTicketPurchasedStatus(Ticket ticket) {

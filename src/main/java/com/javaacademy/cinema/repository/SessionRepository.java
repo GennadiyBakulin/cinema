@@ -35,8 +35,8 @@ public class SessionRepository {
   }
 
   public Optional<Session> findSessionById(Integer id) {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
+    return
+        Optional.ofNullable(jdbcTemplate.queryForObject(
             SQL_QUERY_GET_SESSION_BY_ID,
             this::mapToSession,
             id));

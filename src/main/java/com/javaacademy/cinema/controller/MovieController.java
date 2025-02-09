@@ -56,8 +56,8 @@ public class MovieController {
               responseCode = "403",
               headers = @Header(
                   name = "user-token",
-                  description = "Проверка секретного токена для роли администратор",
-                  required = true),
+                  description = "Проверка секретного токена для роли администратор"
+              ),
               description = "Отмена операции в случае отсутствия в заголовке запроса или несовпадения токена",
               content = {
                   @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
@@ -76,7 +76,7 @@ public class MovieController {
   )
   @PostMapping
   public ResponseEntity<?> saveMovie(
-      @RequestHeader("user-token") String token,
+      @RequestHeader(value = "user-token", required = false) String token,
       @RequestBody MovieDto movieDto) {
     if (Objects.isNull(token) || !token.equals(tokenValue)) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
