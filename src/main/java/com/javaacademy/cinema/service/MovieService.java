@@ -12,20 +12,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MovieService {
 
-  private final MovieRepository repository;
+  private final MovieRepository movieRepository;
   private final MovieMapper mapper;
 
   public Movie saveMovie(MovieDto movieDto) {
-    return repository.saveMovie(movieDto);
+    return movieRepository.saveMovie(movieDto);
   }
 
   public Movie findMovieById(Integer id) {
-    return repository.findMovieById(id)
+    return movieRepository.findMovieById(id)
         .orElseThrow();
   }
 
   public List<MovieDto> getAllMovies() {
-    List<Movie> movieList = repository.getAllMovies();
+    List<Movie> movieList = movieRepository.getAllMovies();
     return movieList.stream().map(mapper::entityToMovieDto).toList();
   }
 }

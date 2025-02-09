@@ -6,6 +6,7 @@ import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRq;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRs;
 import com.javaacademy.cinema.exception.NotChangeStatusTicket;
+import com.javaacademy.cinema.repository.SessionRepository;
 import com.javaacademy.cinema.repository.TicketRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class TicketService {
 
   private final TicketRepository ticketRepository;
-  private final SessionService sessionService;
+  private final SessionRepository sessionRepository;
 
   public Ticket saveTicket(Place place, Session session) {
     return ticketRepository.saveTicket(place, session);
@@ -39,7 +40,8 @@ public class TicketService {
   }
 
   public TicketBookingDtoRs bookingTicket(TicketBookingDtoRq ticketBookingDtoRq) {
-    Session session = sessionService.findSessionById(ticketBookingDtoRq.getSessionId());
+    Session session = sessionRepository.findSessionById(ticketBookingDtoRq.getSessionId())
+        .orElseThrow();
     List<Ticket> listNotPurchasedTicket = getListNotPurchasedTicket(session.getId());
     Ticket ticketNotPurchased = listNotPurchasedTicket.stream()
         .filter(ticket -> ticket.getPlace().getName().equals(ticketBookingDtoRq.getPlaceName()))

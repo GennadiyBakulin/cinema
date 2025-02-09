@@ -6,7 +6,9 @@ import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
 import com.javaacademy.cinema.mapper.SessionMapper;
+import com.javaacademy.cinema.repository.PlaceRepository;
 import com.javaacademy.cinema.repository.SessionRepository;
+import com.javaacademy.cinema.repository.TicketRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,14 @@ import org.springframework.stereotype.Service;
 public class SessionService {
 
   private final SessionRepository sessionRepository;
-  private final TicketService ticketService;
-  private final PlaceService placeService;
+  private final TicketRepository ticketRepository;
+  private final PlaceRepository placeRepository;
   private final SessionMapper mapper;
 
   public Session saveSession(SessionDtoRq sessionDtoRq) {
     Session session = sessionRepository.saveSession(sessionDtoRq);
-    List<Place> placeList = placeService.getAllPlace();
-    placeList.forEach(place -> ticketService.saveTicket(place, session));
+    List<Place> placeList = placeRepository.getAllPlace();
+    placeList.forEach(place -> ticketRepository.saveTicket(place, session));
     return session;
   }
 
@@ -36,10 +38,10 @@ public class SessionService {
   }
 
   public List<String> getFreePlaceOnSession(Integer id) {
-    List<Ticket> listNotPurchasedTicketOnSession = ticketService.
-        getListNotPurchasedTicket(id);
+    List<Ticket> listNotPurchasedTicketOnSession = ticketRepository.
+        getListNotPurchasedTicketOnSession(id);
     List<Place> listFreePlace = listNotPurchasedTicketOnSession.stream()
-        .map(ticket -> placeService.findPlaceById(ticket.getPlace().getId()))
+        .map(ticket -> placeRepository.findPlaceById(ticket.getPlace().getId()).orElseThrow())
         .toList();
     return listFreePlace.stream().map(Place::getName).toList();
   }
