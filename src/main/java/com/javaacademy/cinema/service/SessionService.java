@@ -5,6 +5,7 @@ import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
+import com.javaacademy.cinema.exception.NotFoundPlaceById;
 import com.javaacademy.cinema.mapper.SessionMapper;
 import com.javaacademy.cinema.repository.PlaceRepository;
 import com.javaacademy.cinema.repository.SessionRepository;
@@ -37,11 +38,12 @@ public class SessionService {
     return sessionRepository.getAllSession().stream().map(mapper::entityToSessionDtoRs).toList();
   }
 
-  public List<String> getFreePlaceOnSession(Integer id) {
+  public List<String> getFreePlaceOnSession(Integer sessionId) {
     List<Ticket> listNotPurchasedTicketOnSession = ticketRepository.
-        getListNotPurchasedTicketOnSession(id);
+        getListNotPurchasedTicketOnSession(sessionId);
     List<Place> listFreePlace = listNotPurchasedTicketOnSession.stream()
-        .map(ticket -> placeRepository.findPlaceById(ticket.getPlace().getId()).orElseThrow())
+        .map(ticket -> placeRepository.findPlaceById(ticket.getPlace().getId())
+            .orElseThrow(() -> new NotFoundPlaceById("Не найдено место по указанному Id!")))
         .toList();
     return listFreePlace.stream().map(Place::getName).toList();
   }
