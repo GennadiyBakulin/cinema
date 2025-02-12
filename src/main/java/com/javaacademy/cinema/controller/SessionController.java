@@ -3,8 +3,6 @@ package com.javaacademy.cinema.controller;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
-import com.javaacademy.cinema.exception.NotFoundPlaceById;
-import com.javaacademy.cinema.exception.NotFoundSessionById;
 import com.javaacademy.cinema.service.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -112,7 +110,7 @@ public class SessionController {
   public ResponseEntity<?> getFreePlacesOnSession(@PathVariable Integer id) {
     try {
       return ResponseEntity.ok(sessionService.getFreePlaceOnSession(id));
-    } catch (NotFoundPlaceById | NotFoundSessionById ex) {
+    } catch (RuntimeException ex) {
       System.out.println(ex.getMessage());
       return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
     }

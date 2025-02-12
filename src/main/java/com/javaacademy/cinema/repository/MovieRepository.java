@@ -60,7 +60,7 @@ public class MovieRepository {
         SQL_QUERY_CHECK_UNIQUE_NAME_MOVIE,
         Integer.class,
         name);
-    if (Objects.nonNull(count) && count != 0) {
+    if (Objects.nonNull(count) && count > 0) {
       throw new NotUniqueNameMovie(
           "Не удалось добавить фильм, фильм с таким названием уже есть в БД!");
     }
