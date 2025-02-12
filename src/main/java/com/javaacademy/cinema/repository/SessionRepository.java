@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -35,11 +36,17 @@ public class SessionRepository {
   }
 
   public Optional<Session> findSessionById(Integer id) {
-    return
-        Optional.ofNullable(jdbcTemplate.queryForObject(
-            SQL_QUERY_GET_SESSION_BY_ID,
-            this::mapToSession,
-            id));
+    try {
+      return
+          Optional.ofNullable(jdbcTemplate.queryForObject(
+              SQL_QUERY_GET_SESSION_BY_ID,
+              this::mapToSession,
+              id));
+    } catch (
+        EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
+
   }
 
   public List<Session> getAllSession() {

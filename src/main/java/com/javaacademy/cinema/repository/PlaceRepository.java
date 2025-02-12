@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -19,11 +20,16 @@ public class PlaceRepository {
   private final JdbcTemplate jdbcTemplate;
 
   public Optional<Place> findPlaceById(Integer id) {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            SQL_QUERY_GET_PLACE_BY_ID,
-            this::mapToPlace,
-            id));
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              SQL_QUERY_GET_PLACE_BY_ID,
+              this::mapToPlace,
+              id));
+    } catch (
+        EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   public List<Place> getAllPlace() {

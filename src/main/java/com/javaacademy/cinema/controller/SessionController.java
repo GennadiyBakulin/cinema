@@ -15,12 +15,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -56,13 +56,9 @@ public class SessionController {
       }
   )
   @PostMapping
-  public ResponseEntity<?> saveSession(@RequestBody SessionDtoRq sessionDtoRq) {
-    try {
-      Session session = sessionService.saveSession(sessionDtoRq);
-      return ResponseEntity.status(HttpStatus.CREATED).body(session);
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body(ex.getMessage());
-    }
+  @ResponseStatus(HttpStatus.CREATED)
+  public Session saveSession(@RequestBody SessionDtoRq sessionDtoRq) {
+    return sessionService.saveSession(sessionDtoRq);
   }
 
   @Operation(
@@ -78,6 +74,7 @@ public class SessionController {
       }
   )
   @GetMapping
+  @ResponseStatus(HttpStatus.OK)
   public List<SessionDtoRs> getAllSession() {
     return sessionService.getAllSession();
   }
@@ -85,17 +82,28 @@ public class SessionController {
   @Operation(
       summary = "Получение всех свободных мест на сеанс.",
       description = "Получение всех свободных мест из БД посетителем кинотеатра.")
-  @ApiResponse(
-      responseCode = "201",
-      description = "Успешное получение свободных мест на сеанс",
-      content = {
-          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = String.class))
-          )
-      }
-  )
+  @ApiResponses(
+      value = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "Успешное получение свободных мест на сеанс",
+              content = {
+                  @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                      array = @ArraySchema(schema = @Schema(implementation = String.class))
+                  )
+              }
+          ),
+          @ApiResponse(
+              responseCode = "404",
+              description = "Отмена операции в случае если не найден указанный сеанс",
+              content = {
+                  @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                      schema = @Schema(implementation = String.class))
+              }
+          )})
   @GetMapping("/{id}/free-place")
-  public ResponseEntity<?> getFreePlacesOnSession(@PathVariable Integer id) {
-    return ResponseEntity.ok(sessionService.getFreePlaceOnSession(id));
+  @ResponseStatus(HttpStatus.OK)
+  public List<String> getFreePlacesOnSession(@PathVariable Integer id) {
+    return sessionService.getFreePlaceOnSession(id);
   }
 }

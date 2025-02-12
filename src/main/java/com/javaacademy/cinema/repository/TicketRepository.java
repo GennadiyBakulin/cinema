@@ -4,11 +4,13 @@ import com.javaacademy.cinema.entity.Place;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.exception.NotChangeStatusTicket;
+import com.javaacademy.cinema.exception.NotFoundSessionById;
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -41,11 +43,16 @@ public class TicketRepository {
 
 
   public Optional<Ticket> findTicketById(Integer ticketId) {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            SQL_QUERY_GET_TICKET_BY_ID,
-            this::mapToTicket,
-            ticketId));
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              SQL_QUERY_GET_TICKET_BY_ID,
+              this::mapToTicket,
+              ticketId));
+    } catch (
+        EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   public void changeTicketStatusByIdToPurchased(Integer ticketId) {
@@ -57,6 +64,8 @@ public class TicketRepository {
   }
 
   public List<Ticket> getListPurchasedTicketOnSession(Integer sessionId) {
+    sessionRepository.findSessionById(sessionId)
+        .orElseThrow(() -> new NotFoundSessionById("Сеанс с указанным Id не найден!"));
     return jdbcTemplate.query(
         SQL_QUERY_GET_LIST_PURCHASED_TICKET_ON_SESSION,
         this::mapToTicket,
@@ -64,6 +73,8 @@ public class TicketRepository {
   }
 
   public List<Ticket> getListNotPurchasedTicketOnSession(Integer sessionId) {
+    sessionRepository.findSessionById(sessionId)
+        .orElseThrow(() -> new NotFoundSessionById("Сеанс с указанным Id не найден!"));
     return jdbcTemplate.query(
         SQL_QUERY_GET_LIST_NOT_PURCHASED_TICKET_ON_SESSION,
         this::mapToTicket,

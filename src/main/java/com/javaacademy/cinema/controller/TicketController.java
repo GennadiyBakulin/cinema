@@ -15,12 +15,12 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -35,16 +35,27 @@ public class TicketController {
   @Operation(
       summary = "Показывает список купленных билетов.",
       description = "Показывает список купленных билетов из БД пользователю с ролью администратор.")
-  @ApiResponse(
-      responseCode = "200",
-      description = "Успешное получение проданных билетов на сеанс",
-      content = {
-          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-              array = @ArraySchema(schema = @Schema(implementation = Ticket.class))
-          )
-      }
-  )
+  @ApiResponses(
+      value = {
+          @ApiResponse(
+              responseCode = "200",
+              description = "Успешное получение проданных билетов на сеанс",
+              content = {
+                  @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                      array = @ArraySchema(schema = @Schema(implementation = Ticket.class))
+                  )
+              }
+          ),
+          @ApiResponse(
+              responseCode = "404",
+              description = "Отмена операции в случае если не найден указанный сеанс",
+              content = {
+                  @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                      schema = @Schema(implementation = String.class))
+              }
+          )})
   @GetMapping("/saled")
+  @ResponseStatus(HttpStatus.OK)
   public List<Ticket> getListPurchasedTicket(@RequestParam Integer sessionId) {
     return ticketService.getListPurchasedTicket(sessionId);
   }
@@ -55,7 +66,7 @@ public class TicketController {
   @ApiResponses(
       value = {
           @ApiResponse(
-              responseCode = "201",
+              responseCode = "200",
               description = "Успешный выкуп билета",
               content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
@@ -63,9 +74,16 @@ public class TicketController {
               }
           ),
           @ApiResponse(
+              responseCode = "409",
+              description = "Отмена операции в случае если билет уже был выкуплен или не найдено место",
+              content = {
+                  @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
+                      schema = @Schema(implementation = String.class))
+              }
+          ),
+          @ApiResponse(
               responseCode = "404",
-              description = "Отмена операции в случае если билет уже был выкуплен "
-                  + "или не найдены указанный сеанс или место",
+              description = "Отмена операции в случае если не найден указанный сеанс",
               content = {
                   @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
                       schema = @Schema(implementation = String.class))
@@ -74,11 +92,8 @@ public class TicketController {
       }
   )
   @PostMapping("/booking")
-  public ResponseEntity<?> bookingTicket(@RequestBody TicketBookingDtoRq ticketBookingDtoRq) {
-    try {
-      return ResponseEntity.ok(ticketService.bookingTicket(ticketBookingDtoRq));
-    } catch (Exception ex) {
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
+  @ResponseStatus(HttpStatus.OK)
+  public TicketBookingDtoRs bookingTicket(@RequestBody TicketBookingDtoRq ticketBookingDtoRq) {
+    return ticketService.bookingTicket(ticketBookingDtoRq);
   }
 }

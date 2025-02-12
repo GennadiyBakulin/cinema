@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -35,11 +36,16 @@ public class MovieRepository {
   }
 
   public Optional<Movie> findMovieById(Integer id) {
-    return Optional.ofNullable(
-        jdbcTemplate.queryForObject(
-            SQL_QUERY_GET_MOVIE_BY_ID,
-            this::mapToMovie,
-            id));
+    try {
+      return Optional.ofNullable(
+          jdbcTemplate.queryForObject(
+              SQL_QUERY_GET_MOVIE_BY_ID,
+              this::mapToMovie,
+              id));
+    } catch (
+        EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
   }
 
   public List<Movie> getAllMovies() {
