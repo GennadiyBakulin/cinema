@@ -85,34 +85,17 @@ public class SessionController {
   @Operation(
       summary = "Получение всех свободных мест на сеанс.",
       description = "Получение всех свободных мест из БД посетителем кинотеатра.")
-  @ApiResponses(
-      value = {
-          @ApiResponse(
-              responseCode = "201",
-              description = "Успешное получение свободных мест на сеанс",
-              content = {
-                  @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                      array = @ArraySchema(schema = @Schema(implementation = String.class))
-                  )
-              }
-          ),
-          @ApiResponse(
-              responseCode = "404",
-              description = "Отмена операции в случае если не найден сеанс с указанным Id",
-              content = {
-                  @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
-                      schema = @Schema(implementation = String.class))
-              }
+  @ApiResponse(
+      responseCode = "201",
+      description = "Успешное получение свободных мест на сеанс",
+      content = {
+          @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+              array = @ArraySchema(schema = @Schema(implementation = String.class))
           )
       }
   )
   @GetMapping("/{id}/free-place")
   public ResponseEntity<?> getFreePlacesOnSession(@PathVariable Integer id) {
-    try {
-      return ResponseEntity.ok(sessionService.getFreePlaceOnSession(id));
-    } catch (RuntimeException ex) {
-      System.out.println(ex.getMessage());
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
+    return ResponseEntity.ok(sessionService.getFreePlaceOnSession(id));
   }
 }
