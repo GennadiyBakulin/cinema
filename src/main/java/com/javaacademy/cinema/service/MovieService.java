@@ -2,6 +2,7 @@ package com.javaacademy.cinema.service;
 
 import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.dto.MovieDto;
+import com.javaacademy.cinema.exception.NotFoundMovieById;
 import com.javaacademy.cinema.mapper.MovieMapper;
 import com.javaacademy.cinema.repository.MovieRepository;
 import java.util.List;
@@ -21,7 +22,7 @@ public class MovieService {
 
   public Movie findMovieById(Integer id) {
     return movieRepository.findMovieById(id)
-        .orElseThrow();
+        .orElseThrow(() -> new NotFoundMovieById("Не найден фильм с указанным Id!"));
   }
 
   public List<MovieDto> getAllMovies() {
