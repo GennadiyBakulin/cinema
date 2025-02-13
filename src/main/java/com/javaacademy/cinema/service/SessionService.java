@@ -6,8 +6,10 @@ import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
+import com.javaacademy.cinema.exception.NotFoundSessionById;
 import com.javaacademy.cinema.mapper.SessionMapper;
 import com.javaacademy.cinema.repository.SessionRepository;
+import com.javaacademy.cinema.repository.TicketRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,7 @@ import org.springframework.stereotype.Service;
 public class SessionService {
 
   private final SessionRepository sessionRepository;
-  private final SessionService sessionService;
-  private final TicketService ticketService;
+  private final TicketRepository ticketRepository;
   private final PlaceService placeService;
   private final MovieService movieService;
   private final SessionMapper mapper;
@@ -27,12 +28,13 @@ public class SessionService {
     Movie movie = movieService.findMovieById(sessionDtoRq.getMovieId());
     Session session = sessionRepository.saveSession(sessionDtoRq, movie);
     List<Place> placeList = placeService.getAllPlace();
-    placeList.forEach(place -> ticketService.saveTicket(place, session));
+    placeList.forEach(place -> ticketRepository.saveTicket(place, session));
     return session;
   }
 
   public Session findSessionById(Integer id) {
-    return sessionService.findSessionById(id);
+    return sessionRepository.findSessionById(id)
+        .orElseThrow(() -> new NotFoundSessionById("Не найден сеанс с указанным Id!"));
   }
 
   public List<SessionDtoRs> getAllSession() {
@@ -40,8 +42,8 @@ public class SessionService {
   }
 
   public List<String> getFreePlaceOnSession(Integer sessionId) {
-    List<Ticket> listNotPurchasedTicketOnSession = ticketService.
-        getListNotPurchasedTicket(sessionId);
+    List<Ticket> listNotPurchasedTicketOnSession = ticketRepository.
+        getListNotPurchasedTicketOnSession(sessionId);
     List<Place> listFreePlace = listNotPurchasedTicketOnSession.stream()
         .map(ticket -> placeService.findPlaceById(ticket.getPlace().getId()))
         .toList();
