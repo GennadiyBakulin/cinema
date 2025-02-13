@@ -33,10 +33,12 @@ public class TicketService {
   }
 
   public List<Ticket> getListPurchasedTicket(Integer sessionId) {
+    sessionService.findSessionById(sessionId);
     return ticketRepository.getListPurchasedTicketOnSession(sessionId);
   }
 
   public List<Ticket> getListNotPurchasedTicket(Integer sessionId) {
+    sessionService.findSessionById(sessionId);
     return ticketRepository.getListNotPurchasedTicketOnSession(sessionId);
   }
 
