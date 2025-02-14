@@ -88,7 +88,7 @@ class SessionControllerTest {
       "/scripts/session/add_list_session.sql"})
   @DisplayName("Успешное получение списка всех сеансов из БД")
   public void successGetListAllSession() {
-    int expectCountMoviesToDb = 4;
+    int expectCountSessionToDb = 4;
 
     List<SessionDtoRs> sessionList = RestAssured.given(requestSpecification)
         .get()
@@ -101,7 +101,7 @@ class SessionControllerTest {
         });
 
     Assertions.assertFalse(sessionList.isEmpty());
-    Assertions.assertEquals(expectCountMoviesToDb, sessionList.size());
+    Assertions.assertEquals(expectCountSessionToDb, sessionList.size());
   }
 
   @Test

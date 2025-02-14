@@ -5,8 +5,10 @@ import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRq;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRs;
+import com.javaacademy.cinema.entity.dto.TicketPurchasedDtoRs;
 import com.javaacademy.cinema.exception.NotChangeStatusTicket;
 import com.javaacademy.cinema.exception.NotFoundTicketById;
+import com.javaacademy.cinema.mapper.TicketMapper;
 import com.javaacademy.cinema.repository.TicketRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ public class TicketService {
 
   private final TicketRepository ticketRepository;
   private final SessionService sessionService;
+  private final TicketMapper mapper;
 
   public Ticket saveTicket(Place place, Session session) {
     return ticketRepository.saveTicket(place, session);
@@ -32,9 +35,12 @@ public class TicketService {
     ticketRepository.changeTicketStatusByIdToPurchased(ticketId);
   }
 
-  public List<Ticket> getListPurchasedTicket(Integer sessionId) {
+  public List<TicketPurchasedDtoRs> getListPurchasedTicket(Integer sessionId) {
     sessionService.findSessionById(sessionId);
-    return ticketRepository.getListPurchasedTicketOnSession(sessionId);
+    List<Ticket> purchasedTicket = ticketRepository.getListPurchasedTicketOnSession(
+        sessionId);
+    return purchasedTicket.stream().map(mapper::entityToTicketPurchasedDtoRs)
+        .toList();
   }
 
   public List<Ticket> getListNotPurchasedTicket(Integer sessionId) {

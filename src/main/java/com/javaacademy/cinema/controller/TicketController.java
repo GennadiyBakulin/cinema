@@ -1,8 +1,8 @@
 package com.javaacademy.cinema.controller;
 
-import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRq;
 import com.javaacademy.cinema.entity.dto.TicketBookingDtoRs;
+import com.javaacademy.cinema.entity.dto.TicketPurchasedDtoRs;
 import com.javaacademy.cinema.service.TicketService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -42,7 +42,7 @@ public class TicketController {
               description = "Успешное получение проданных билетов на сеанс",
               content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                      array = @ArraySchema(schema = @Schema(implementation = Ticket.class))
+                      array = @ArraySchema(schema = @Schema(implementation = TicketPurchasedDtoRs.class))
                   )
               }
           ),
@@ -56,7 +56,7 @@ public class TicketController {
           )})
   @GetMapping("/saled")
   @ResponseStatus(HttpStatus.OK)
-  public List<Ticket> getListPurchasedTicket(@RequestParam Integer sessionId) {
+  public List<TicketPurchasedDtoRs> getListPurchasedTicket(@RequestParam Integer sessionId) {
     return ticketService.getListPurchasedTicket(sessionId);
   }
 
