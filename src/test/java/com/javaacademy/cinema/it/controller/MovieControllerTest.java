@@ -31,7 +31,7 @@ class MovieControllerTest {
   private MovieService movieService;
 
   private final Header token = new Header("user-token", "secretadmin123");
-  private final Header tokenError = new Header("user", "");
+  private final Header tokenError = new Header("hacker", "error");
   private final MovieDto movieRequest = new MovieDto("Тест", "Описание фильма");
 
   private final RequestSpecification requestSpecification = new RequestSpecBuilder()
