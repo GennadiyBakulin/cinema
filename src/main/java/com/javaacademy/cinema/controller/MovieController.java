@@ -3,7 +3,6 @@ package com.javaacademy.cinema.controller;
 import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.dto.MovieDto;
 import com.javaacademy.cinema.entity.dto.MovieSaveDtoRs;
-import com.javaacademy.cinema.exception.AccessDenied;
 import com.javaacademy.cinema.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -14,9 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,9 +32,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MovieController {
 
   private final MovieService movieService;
-
-  @Value("${header.user-token.value}")
-  private String tokenValue;
 
   @Operation(
       summary = "Сохранение нового фильма.",
@@ -80,9 +74,7 @@ public class MovieController {
   public MovieSaveDtoRs saveMovie(
       @RequestHeader(value = "user-token", required = false) String token,
       @RequestBody MovieDto movieDto) {
-    if (Objects.isNull(token) || !token.equals(tokenValue)) {
-      throw new AccessDenied("Отсутствует либо не верно указан токен!");
-    }
+    movieService.tokenValidate(token);
     return movieService.saveMovie(movieDto);
   }
 
