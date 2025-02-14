@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cinema_test
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+header:
+  user-token:
+    value: secretadmin123

@@ -2,6 +2,7 @@ package com.javaacademy.cinema.controller;
 
 import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.dto.MovieDto;
+import com.javaacademy.cinema.entity.dto.MovieSaveDtoRs;
 import com.javaacademy.cinema.exception.AccessDenied;
 import com.javaacademy.cinema.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,7 +77,7 @@ public class MovieController {
   )
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Movie saveMovie(
+  public MovieSaveDtoRs saveMovie(
       @RequestHeader(value = "user-token", required = false) String token,
       @RequestBody MovieDto movieDto) {
     if (Objects.isNull(token) || !token.equals(tokenValue)) {

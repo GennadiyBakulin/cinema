@@ -2,6 +2,7 @@ package com.javaacademy.cinema.service;
 
 import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.dto.MovieDto;
+import com.javaacademy.cinema.entity.dto.MovieSaveDtoRs;
 import com.javaacademy.cinema.exception.NotFoundMovieById;
 import com.javaacademy.cinema.mapper.MovieMapper;
 import com.javaacademy.cinema.repository.MovieRepository;
@@ -16,8 +17,9 @@ public class MovieService {
   private final MovieRepository movieRepository;
   private final MovieMapper mapper;
 
-  public Movie saveMovie(MovieDto movieDto) {
-    return movieRepository.saveMovie(movieDto);
+  public MovieSaveDtoRs saveMovie(MovieDto movieDto) {
+    Movie movie = movieRepository.saveMovie(movieDto);
+    return mapper.entityToMovieSaveDtoRs(movie);
   }
 
   public Movie findMovieById(Integer id) {
