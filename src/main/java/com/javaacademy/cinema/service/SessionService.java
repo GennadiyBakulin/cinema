@@ -6,6 +6,7 @@ import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.Ticket;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
+import com.javaacademy.cinema.entity.dto.SessionSaveDtoRs;
 import com.javaacademy.cinema.exception.NotFoundSessionById;
 import com.javaacademy.cinema.mapper.SessionMapper;
 import com.javaacademy.cinema.repository.SessionRepository;
@@ -24,12 +25,12 @@ public class SessionService {
   private final MovieService movieService;
   private final SessionMapper mapper;
 
-  public Session saveSession(SessionDtoRq sessionDtoRq) {
+  public SessionSaveDtoRs saveSession(SessionDtoRq sessionDtoRq) {
     Movie movie = movieService.findMovieById(sessionDtoRq.getMovieId());
     Session session = sessionRepository.saveSession(sessionDtoRq, movie);
     List<Place> placeList = placeService.getAllPlace();
     placeList.forEach(place -> ticketRepository.saveTicket(place, session));
-    return session;
+    return mapper.entityToSessionSaveDtoRs(session);
   }
 
   public Session findSessionById(Integer id) {
@@ -42,6 +43,7 @@ public class SessionService {
   }
 
   public List<String> getFreePlaceOnSession(Integer sessionId) {
+    findSessionById(sessionId);
     List<Ticket> listNotPurchasedTicketOnSession = ticketRepository.
         getListNotPurchasedTicketOnSession(sessionId);
     List<Place> listFreePlace = listNotPurchasedTicketOnSession.stream()

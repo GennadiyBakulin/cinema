@@ -3,6 +3,7 @@ package com.javaacademy.cinema.controller;
 import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
+import com.javaacademy.cinema.entity.dto.SessionSaveDtoRs;
 import com.javaacademy.cinema.service.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -46,7 +47,7 @@ public class SessionController {
               }
           ),
           @ApiResponse(
-              responseCode = "304",
+              responseCode = "404",
               description = "Отмена операции в случае если не найден фильм с указанным Id",
               content = {
                   @Content(mediaType = MediaType.TEXT_PLAIN_VALUE,
@@ -57,7 +58,7 @@ public class SessionController {
   )
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public Session saveSession(@RequestBody SessionDtoRq sessionDtoRq) {
+  public SessionSaveDtoRs saveSession(@RequestBody SessionDtoRq sessionDtoRq) {
     return sessionService.saveSession(sessionDtoRq);
   }
 

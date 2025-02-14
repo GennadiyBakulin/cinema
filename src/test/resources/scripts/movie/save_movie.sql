@@ -1,1 +1,0 @@
-insert into movie (name, description) values ('Тест', 'Описание фильма');

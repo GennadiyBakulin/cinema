@@ -1,6 +1,5 @@
 package com.javaacademy.cinema.it.controller;
 
-import com.javaacademy.cinema.entity.Movie;
 import com.javaacademy.cinema.entity.dto.MovieDto;
 import com.javaacademy.cinema.entity.dto.MovieSaveDtoRs;
 import com.javaacademy.cinema.service.MovieService;
@@ -30,6 +29,7 @@ class MovieControllerTest {
 
   @Autowired
   private MovieService movieService;
+
   private final Header token = new Header("user-token", "secretadmin123");
   private final Header tokenError = new Header("user", "");
   private final MovieDto movieRequest = new MovieDto("Тест", "Описание фильма");
@@ -87,9 +87,10 @@ class MovieControllerTest {
   }
 
   @Test
-  @Sql({"/scripts/clean_table.sql", "/scripts/movie/save_movie.sql"})
   @DisplayName("Успешное выбрасывание ошибки при попытке сохранения фильма с именем которое уже есть в БД")
   public void notSuccessSaveMovieIfExistName() {
+    movieService.saveMovie(movieRequest);
+
     RestAssured.given(requestSpecification)
         .header(token)
         .body(movieRequest)
@@ -100,7 +101,7 @@ class MovieControllerTest {
   }
 
   @Test
-  @Sql({"/scripts/clean_table.sql", "/scripts/movie/save_list_movie.sql"})
+  @Sql({"/scripts/clean_table.sql", "/scripts/movie/add_list_movie.sql"})
   @DisplayName("Успешное получение списка фильмов из БД")
   public void successGetListAllMovies() {
     int expectCountMoviesToDb = 4;
