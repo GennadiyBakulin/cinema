@@ -1,6 +1,5 @@
 package com.javaacademy.cinema.controller;
 
-import com.javaacademy.cinema.entity.Session;
 import com.javaacademy.cinema.entity.dto.SessionDtoRq;
 import com.javaacademy.cinema.entity.dto.SessionDtoRs;
 import com.javaacademy.cinema.entity.dto.SessionSaveDtoRs;
@@ -43,7 +42,7 @@ public class SessionController {
               description = "Успешное сохранение сеанса",
               content = {
                   @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                      schema = @Schema(implementation = Session.class))
+                      schema = @Schema(implementation = SessionSaveDtoRs.class))
               }
           ),
           @ApiResponse(
